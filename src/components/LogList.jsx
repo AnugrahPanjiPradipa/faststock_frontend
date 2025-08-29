@@ -91,6 +91,7 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
     <div className="p-2 sm:p-4">
       {/* Filter dan aksi */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        {/* Kiri: filter + export */}
         <div className="flex flex-wrap items-center gap-2">
           <div>
             <label className="mr-2 text-sm">Tanggal:</label>
@@ -124,10 +125,11 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
           </button>
         </div>
 
+        {/* Kanan: hapus log */}
         <button
           onClick={handleDeleteLogs}
           disabled={loading}
-          className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+          className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 w-full sm:w-auto"
         >
           {loading ? 'Menghapus...' : 'Hapus Log Tanggal Ini'}
         </button>
