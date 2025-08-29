@@ -41,21 +41,22 @@ function Dashboard() {
       {/* Container utama */}
       <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow p-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Dashboard Stok Gudang & Etalase</h1>
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left">Dashboard Stok Gudang & Etalase</h1>
           <button
             onClick={handleLogout}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 w-full sm:w-auto"
           >
             Logout
           </button>
         </div>
 
         {/* Tombol Tambah Barang */}
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-center sm:justify-end mb-6">
           <button
             onClick={() => setShowForm(!showForm)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto"
           >
             {showForm ? 'Sembunyikan Form' : 'Tambah Barang'}
           </button>

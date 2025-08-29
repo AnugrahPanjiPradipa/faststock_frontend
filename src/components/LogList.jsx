@@ -136,8 +136,9 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
       </div>
 
       {/* Tabel log */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs sm:text-sm border">
+      {/* Tabel log - tampil hanya di layar >= sm */}
+      <div className="hidden sm:block overflow-x-auto">
+        <table className="w-full text-sm border rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-200">
               <th className="p-2">Waktu</th>
@@ -170,13 +171,13 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
                   <td className="p-2 flex gap-2">
                     <button
                       onClick={() => openEditModal(log)}
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-600 hover:underline"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteLog(log._id)}
-                      className="text-red-500 hover:underline"
+                      className="text-red-600 hover:underline"
                     >
                       Hapus
                     </button>
@@ -186,6 +187,43 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List - tampil hanya di layar < sm */}
+      <div className="sm:hidden space-y-3">
+        {logs.length === 0 ? (
+          <div className="text-center text-gray-500 py-4">Tidak ada log</div>
+        ) : (
+          logs.map((log) => (
+            <div
+              key={log._id}
+              className="bg-white border rounded-lg p-3 shadow-sm"
+            >
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs text-gray-500">{dayjs(log.createdAt).format('HH:mm, DD MMM YYYY')}</span>
+                <span className="capitalize text-sm font-medium text-gray-700">{log.type}</span>
+              </div>
+              <div className="mb-2">
+                <p className="font-semibold">{log.itemName}</p>
+                <p className="text-sm text-gray-600">Jumlah: {log.jumlah}</p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => openEditModal(log)}
+                  className="flex-1 bg-blue-600 text-white py-1 rounded-lg text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteLog(log._id)}
+                  className="flex-1 bg-red-600 text-white py-1 rounded-lg text-sm"
+                >
+                  Hapus
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Modal Edit */}
