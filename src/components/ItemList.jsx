@@ -17,7 +17,7 @@ export default function ItemList({ onActivitySuccess }) {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get('faststockbackend-production.up.railway.app/api/items', {
+      const res = await axios.get('https://faststockbackend-production.up.railway.app/api/items', {
         params: {
           page: currentPage,
           limit: itemsPerPage,
@@ -44,7 +44,7 @@ export default function ItemList({ onActivitySuccess }) {
   const handleDelete = async (id) => {
     if (!confirm('Yakin ingin menghapus item ini?')) return;
     try {
-      await axios.delete(`faststockbackend-production.up.railway.app/api/items/${id}`);
+      await axios.delete(`https://faststockbackend-production.up.railway.app/api/items/${id}`);
       onActivitySuccess?.(); // 🔹 trigger parent refresh ItemList + LogList
     } catch (error) {
       console.error('Gagal menghapus item:', error);
@@ -59,7 +59,7 @@ export default function ItemList({ onActivitySuccess }) {
       if (editImage) formData.append('image', editImage);
       formData.append('addStockGudang', addStockGudang);
 
-      await axios.put(`faststockbackend-production.up.railway.app/api/items/${editItem._id}`, formData, {
+      await axios.put(`https://faststockbackend-production.up.railway.app/api/items/${editItem._id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -105,7 +105,7 @@ export default function ItemList({ onActivitySuccess }) {
             >
               <h2 className="text-xl font-bold">{item.name}</h2>
               <img
-                src={`faststockbackend-production.up.railway.app${item.image}`}
+                src={`https://faststockbackend-production.up.railway.app${item.image}`}
                 alt={item.name}
                 className="w-32 h-32 object-cover mt-2"
               />

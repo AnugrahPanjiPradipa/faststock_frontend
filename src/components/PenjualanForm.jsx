@@ -9,7 +9,7 @@ export default function PenjualanForm({ item, onSuccess, onActivitySuccess }) {
     if (!jumlah || jumlah <= 0) return alert('Jumlah harus lebih dari 0');
 
     try {
-      await axios.put(`faststockbackend-production.up.railway.app/api/items/penjualan/${item._id}`, {
+      await axios.put(`https://faststockbackend-production.up.railway.app/api/items/penjualan/${item._id}`, {
         jumlah: parseInt(jumlah),
       });
 

@@ -14,10 +14,17 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
   const [editType, setEditType] = useState('input');
 
   const fetchLogs = async () => {
-    const res = await axios.get(`faststockbackend-production.up.railway.app/api/logs`, {
-      params: { date: tanggal, type: jenis },
-    });
-    setLogs(res.data);
+    try {
+      const res = await axios.get(`https://faststockbackend-production.up.railway.app/api/logs`, {
+        params: { date: tanggal, type: jenis },
+      });
+
+      console.log('API Logs Response:', res.data); // cek dulu
+      setLogs(Array.isArray(res.data) ? res.data : res.data.logs || []);
+    } catch (err) {
+      console.error('Gagal mengambil data log:', err);
+      setLogs([]); // fallback biar ga error
+    }
   };
 
   useEffect(() => {
@@ -25,7 +32,7 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
   }, [refreshKey, tanggal, jenis]);
 
   const handleExport = () => {
-    const url = `faststockbackend-production.up.railway.app/api/logs/export?date=${tanggal}&type=${jenis}`;
+    const url = `https://faststockbackend-production.up.railway.app/api/logs/export?date=${tanggal}&type=${jenis}`;
     const link = document.createElement('a');
     link.href = url;
     link.download = `log-${tanggal}-${jenis}.xlsx`;
@@ -37,7 +44,7 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
 
     setLoading(true);
     try {
-      await axios.delete('faststockbackend-production.up.railway.app/api/logs', {
+      await axios.delete('https://faststockbackend-production.up.railway.app/api/logs', {
         data: { date: tanggal },
       });
       await fetchLogs();
@@ -52,7 +59,7 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
   const handleDeleteLog = async (id) => {
     if (!confirm('Yakin ingin menghapus log ini? Stok akan dikembalikan.')) return;
     try {
-      await axios.delete(`faststockbackend-production.up.railway.app/api/logs/${id}`);
+      await axios.delete(`https://faststockbackend-production.up.railway.app/api/logs/${id}`);
       await fetchLogs();
       onActivitySuccess?.();
     } catch (err) {
@@ -73,7 +80,7 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
     if (!editLog) return;
 
     try {
-      await axios.put(`faststockbackend-production.up.railway.app/api/logs/${editLog._id}`, {
+      await axios.put(`https://faststockbackend-production.up.railway.app/api/logs/${editLog._id}`, {
         itemId: editLog.itemId, // pastikan log sudah ada itemId di backend
         itemName: editLog.itemName,
         type: editType,

@@ -9,7 +9,7 @@ export default function MutasiForm({ item, onMutasiSuccess, onActivitySuccess })
     if (!jumlah || jumlah <= 0) return alert('Jumlah harus lebih dari 0');
 
     try {
-      await axios.put(`faststockbackend-production.up.railway.app/api/items/mutasi/${item._id}`, {
+      await axios.put(`https://faststockbackend-production.up.railway.app/api/items/mutasi/${item._id}`, {
         jumlah: parseInt(jumlah),
       });
 
