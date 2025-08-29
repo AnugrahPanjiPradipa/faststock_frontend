@@ -21,7 +21,7 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
     formData.append('stockGudang', form.stockGudang);
 
     try {
-      await axios.post('faststockbackend-production.up.railway.app/api/items', formData, {
+      await axios.post('https://faststockbackend-production.up.railway.app/api/items', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setForm({ name: '', image: null, stockGudang: 0 });
