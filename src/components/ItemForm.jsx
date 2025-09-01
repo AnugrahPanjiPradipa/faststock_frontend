@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import axios from 'axios';
 
 export default function ItemForm({ onSuccess, onActivitySuccess }) {
@@ -24,6 +24,8 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
     }
   };
 
+  const fileInputRef = useRef(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -37,6 +39,10 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setForm({ name: '', image: null, stockGudang: 0 });
+      setPreview(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // ⬅️ kosongkan input file
+      }
 
       // refresh list item + log
       onActivitySuccess?.();
