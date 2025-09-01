@@ -8,8 +8,20 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
     stockGudang: 0,
   });
 
+  const [preview, setPreview] = useState(null);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setForm({ ...form, image: file });
+    if (file) {
+      setPreview(URL.createObjectURL(file)); // preview image
+    } else {
+      setPreview(null);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -48,12 +60,30 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
         value={form.name}
         onChange={handleChange}
       />
-      <input
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
-      />
+      {/* Custom Upload */}
+      <div>
+        <label className="block mb-1 font-medium">Gambar Item</label>
+        <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded inline-block hover:bg-blue-600">
+          Pilih Gambar
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </label>
+
+        {/* Preview */}
+        {preview && (
+          <div className="mt-3">
+            <img
+              src={preview}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded border"
+            />
+          </div>
+        )}
+      </div>
 
       <input
         type="number"
