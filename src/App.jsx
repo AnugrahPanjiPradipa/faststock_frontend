@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ItemForm from './components/ItemForm';
 import ItemList from './components/ItemList';
@@ -6,24 +6,11 @@ import LogList from './components/LogList';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-// Protected Route untuk membatasi akses
-function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-      />
-    );
-  }
-  return children;
-}
-
 function Dashboard() {
   const [reload, setReload] = useState(false);
   const [logRefreshKey, setLogRefreshKey] = useState(0);
   const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
 
   // 🔹 Satu fungsi untuk refresh ItemList dan LogList
   const refreshLogsAndItems = () => {
@@ -33,7 +20,7 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/login'; // redirect ke login
+    navigate('/login', { replace: true }); // redirect ke login
   };
 
   return (
@@ -91,21 +78,57 @@ function Dashboard() {
   );
 }
 
+// Protected Route untuk membatasi akses
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+  }
+  return children;
+}
+
+// Public Route untuk halaman login/register
+function PublicRoute({ children }) {
+  const token = localStorage.getItem('token');
+  if (token) {
+    return (
+      <Navigate
+        to="/"
+        replace
+      />
+    );
+  }
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Halaman Login & Register */}
+        {/* Halaman Login & Register (Public Route) */}
         <Route
           path="/login"
-          element={<Login />}
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
         />
         <Route
           path="/register"
-          element={<Register />}
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
         />
 
-        {/* Halaman Dashboard yang dilindungi */}
+        {/* Halaman Dashboard (Protected Route) */}
         <Route
           path="/"
           element={
@@ -118,7 +141,12 @@ function App() {
         {/* Redirect jika route tidak ditemukan */}
         <Route
           path="*"
-          element={<Navigate to="/" />}
+          element={
+            <Navigate
+              to="/"
+              replace
+            />
+          }
         />
       </Routes>
     </BrowserRouter>
