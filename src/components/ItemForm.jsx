@@ -4,24 +4,11 @@ import axios from 'axios';
 export default function ItemForm({ onSuccess, onActivitySuccess }) {
   const [form, setForm] = useState({
     name: '',
-    image: '',
     stockGudang: 0,
   });
 
-  const [preview, setPreview] = useState(null);
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setForm({ ...form, image: file });
-    if (file) {
-      setPreview(URL.createObjectURL(file)); // preview image
-    } else {
-      setPreview(null);
-    }
   };
 
   const fileInputRef = useRef(null);
@@ -31,14 +18,13 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
 
     const formData = new FormData();
     formData.append('name', form.name);
-    formData.append('image', form.image);
     formData.append('stockGudang', form.stockGudang);
 
     try {
       await axios.post('https://faststockbackend-production.up.railway.app/api/items', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setForm({ name: '', image: null, stockGudang: 0 });
+      setForm({ name: '', stockGudang: 0 });
       setPreview(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = ''; // ⬅️ kosongkan input file
@@ -66,31 +52,6 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
         value={form.name}
         onChange={handleChange}
       />
-      {/* Custom Upload */}
-      <div>
-        <label className="block mb-1 font-medium">Gambar Item</label>
-        <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded inline-block hover:bg-blue-600">
-          Pilih Gambar
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </label>
-
-        {/* Preview */}
-        {preview && (
-          <div className="mt-3">
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-32 h-32 object-cover rounded border"
-            />
-          </div>
-        )}
-      </div>
-
       <input
         type="number"
         name="stockGudang"

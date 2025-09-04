@@ -104,11 +104,6 @@ export default function ItemList({ onActivitySuccess }) {
               className="border p-4 rounded shadow"
             >
               <h2 className="text-xl font-bold">{item.name}</h2>
-              <img
-                src={`https://faststockbackend-production.up.railway.app${item.image}`}
-                alt={item.name}
-                className="w-32 h-32 object-cover mt-2"
-              />
               <p className="mt-2 text-sm">Stok Gudang: {item.stockGudang}</p>
               <p className="text-sm">Stok Etalase: {item.stockEtalase}</p>
 
@@ -195,30 +190,34 @@ export default function ItemList({ onActivitySuccess }) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center mt-6 gap-2 items-center">
-          <button
-            onClick={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            ← Prev
-          </button>
-          {[...Array(totalPages)].map((_, index) => (
+        <div className="flex justify-center mt-6">
+          <div className="flex gap-2 items-center overflow-x-auto max-w-full px-2 scrollbar-hide">
             <button
-              key={index}
-              onClick={() => goToPage(index + 1)}
-              className={`px-3 py-1 border rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : ''}`}
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-1 border rounded whitespace-nowrap disabled:opacity-50"
             >
-              {index + 1}
+              ← Prev
             </button>
-          ))}
-          <button
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Next →
-          </button>
+
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToPage(index + 1)}
+                className={`px-3 py-1 border rounded whitespace-nowrap ${currentPage === index + 1 ? 'bg-blue-500 text-white' : ''}`}
+              >
+                {index + 1}
+              </button>
+            ))}
+
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 border rounded whitespace-nowrap disabled:opacity-50"
+            >
+              Next →
+            </button>
+          </div>
         </div>
       )}
     </div>
