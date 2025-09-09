@@ -25,7 +25,6 @@ export default function ItemForm({ onSuccess, onActivitySuccess }) {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setForm({ name: '', stockGudang: 0 });
-      setPreview(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = ''; // ⬅️ kosongkan input file
       }

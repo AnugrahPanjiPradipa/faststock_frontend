@@ -12,6 +12,9 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
   const [editJumlah, setEditJumlah] = useState(0);
   const [editType, setEditType] = useState('input');
 
+  // 🔎 Tambah state untuk search
+  const [searchTerm, setSearchTerm] = useState('');
+
   const fetchLogs = async () => {
     try {
       const res = await axios.get(`https://faststockbackend-production.up.railway.app/api/logs`, { params: { date: tanggal, type: jenis } });
@@ -87,6 +90,9 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
     }
   };
 
+  // 🔎 Filter logs sesuai searchTerm
+  const filteredLogs = logs.filter((log) => log.itemName?.toLowerCase().includes(searchTerm.toLowerCase()));
+
   return (
     <div className="p-2 sm:p-4">
       {/* Filter dan aksi */}
@@ -135,7 +141,17 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
         </button>
       </div>
 
-      {/* Tabel log */}
+      {/* 🔎 Input pencarian */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Cari nama obat..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full border px-3 py-2 rounded text-sm"
+        />
+      </div>
+
       {/* Tabel log - tampil hanya di layar >= sm */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm border rounded-lg overflow-hidden">
@@ -149,7 +165,7 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
             </tr>
           </thead>
           <tbody>
-            {logs.length === 0 ? (
+            {filteredLogs.length === 0 ? (
               <tr>
                 <td
                   colSpan="5"
@@ -159,7 +175,7 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
                 </td>
               </tr>
             ) : (
-              logs.map((log) => (
+              filteredLogs.map((log) => (
                 <tr
                   key={log._id}
                   className="border-t"
@@ -189,12 +205,12 @@ export default function LogList({ refreshKey, onActivitySuccess }) {
         </table>
       </div>
 
-      {/* Mobile Card List - tampil hanya di layar < sm */}
+      {/* Mobile Card List */}
       <div className="sm:hidden space-y-3">
-        {logs.length === 0 ? (
+        {filteredLogs.length === 0 ? (
           <div className="text-center text-gray-500 py-4">Tidak ada log</div>
         ) : (
-          logs.map((log) => (
+          filteredLogs.map((log) => (
             <div
               key={log._id}
               className="bg-white border rounded-lg p-3 shadow-sm"
