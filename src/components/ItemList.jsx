@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import MutasiForm from './MutasiForm';
 import PenjualanForm from './PenjualanForm';
 
-export default function ItemList({ onActivitySuccess }) {
+export default function ItemList({ onActivitySuccess, refreshTrigger }) {
   const [items, setItems] = useState([]);
   const [editItem, setEditItem] = useState(null);
   const [editName, setEditName] = useState('');
@@ -25,8 +25,9 @@ export default function ItemList({ onActivitySuccess }) {
         },
       });
 
+      // ⬅️ Kalau di page sekarang kosong tapi masih ada page sebelumnya
       if (res.data.items.length === 0 && currentPage > 1) {
-        setCurrentPage(1);
+        setCurrentPage(currentPage - 1);
         return;
       }
 
@@ -37,9 +38,10 @@ export default function ItemList({ onActivitySuccess }) {
     }
   };
 
+  // 🔹 Fetch data tiap kali ganti halaman, search, atau refreshTrigger
   useEffect(() => {
     fetchItems();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, refreshTrigger]);
 
   const handleDelete = async (id) => {
     if (!confirm('Yakin ingin menghapus item ini?')) return;
@@ -68,7 +70,7 @@ export default function ItemList({ onActivitySuccess }) {
       setEditImage(null);
       setAddStockGudang(0);
 
-      onActivitySuccess?.(); // 🔹 trigger parent refresh ItemList + LogList
+      onActivitySuccess?.();
     } catch (err) {
       console.error('Gagal update:', err);
     }
@@ -82,6 +84,7 @@ export default function ItemList({ onActivitySuccess }) {
 
   return (
     <div className="p-4">
+      {/* Search */}
       <div className="mb-4 max-w-md">
         <input
           type="text"
@@ -95,6 +98,7 @@ export default function ItemList({ onActivitySuccess }) {
         />
       </div>
 
+      {/* Item Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {items
           .filter((item) => item.stockGudang > 0 || item.stockEtalase > 0)
@@ -126,7 +130,7 @@ export default function ItemList({ onActivitySuccess }) {
                 </button>
               </div>
 
-              {/* 🔹 Mutasi & Penjualan cukup panggil parent refresh */}
+              {/* Mutasi & Penjualan */}
               <MutasiForm
                 item={item}
                 onActivitySuccess={onActivitySuccess}

@@ -15,19 +15,17 @@ function Dashboard() {
   // 🔹 Satu fungsi untuk refresh ItemList dan LogList
   const refreshLogsAndItems = () => {
     setLogRefreshKey((prev) => prev + 1); // refresh LogList
-    setReload((prev) => !prev); // refresh ItemList
+    setReload((prev) => !prev); // trigger refresh ke ItemList
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login', { replace: true }); // redirect ke login
+    navigate('/login', { replace: true });
   };
 
   return (
     <div className="bg-gray-50 min-h-screen p-4">
-      {/* Container utama */}
       <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow p-6">
-        {/* Header */}
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
           <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left">Dashboard Stok Gudang & Etalase</h1>
@@ -62,7 +60,7 @@ function Dashboard() {
         {/* List Item */}
         <div className="mb-8">
           <ItemList
-            key={reload} // ⬅️ trigger ulang fetchItems saat reload berubah
+            refreshTrigger={reload}
             onActivitySuccess={refreshLogsAndItems}
           />
         </div>
